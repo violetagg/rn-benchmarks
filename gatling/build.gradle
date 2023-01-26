@@ -1,0 +1,33 @@
+plugins {
+	id 'java'
+	id 'io.gatling.gradle' version '3.9.0.2'
+}
+
+gatling {
+	logLevel = 'WARN'
+	logHttp = 'NONE'
+
+	if (project.hasProperty('users')) {
+		println "The concurrent users per step is configured to be ${users}"
+		jvmArgs += ["-Dusers=${users}"]
+	}
+
+	if (project.hasProperty('http2')) {
+		println "HTTP/2 is enabled"
+		jvmArgs += ['-Dhttp2']
+	}
+
+	if (project.hasProperty('host')) {
+		println "The target server host is configured to be ${host}"
+		jvmArgs += ["-Dhost=${host}"]
+	}
+
+	if (project.hasProperty('port')) {
+		println "The target server port is configured to be ${port}"
+		jvmArgs += ["-Dport=${port}"]
+	}
+}
+
+repositories {
+	mavenCentral()
+}

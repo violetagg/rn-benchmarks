@@ -1,0 +1,80 @@
+plugins {
+	id 'application'
+	id 'java'
+	id 'com.google.osdetector' version '1.7.3'
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 19
+targetCompatibility = 19
+
+ext {
+	javaMainClass = 'org.example.ServerApplication'
+
+	os_suffix = ""
+	if (osdetector.classifier in ['linux-x86_64'] || ['osx-x86_64'] || ['osx-aarch_64'] || ['windows-x86_64']) {
+		os_suffix = ":" + osdetector.classifier
+	}
+
+	reactorCoreDefaultVersion = '3.5.4'
+	if (!project.hasProperty('forceReactorCoreVersion')) {
+		reactorCoreVersion = reactorCoreDefaultVersion
+	}
+	else {
+		reactorCoreVersion = forceReactorCoreVersion
+		println "Reactor Core version is configured from command line: ${forceReactorCoreVersion}"
+	}
+
+	reactorNettyDefaultVersion = '1.1.5'
+	if (!project.hasProperty('forceReactorNettyVersion')) {
+		reactorNettyVersion = reactorNettyDefaultVersion
+	}
+	else {
+		reactorNettyVersion = forceReactorNettyVersion
+		println "Reactor Netty version is configured from command line: ${forceReactorNettyVersion}"
+	}
+
+	boringSslVersion = '2.0.59.Final'
+	bouncycastleVersion = '1.70'
+
+	logbackVersion = '1.2.11'
+}
+
+repositories {
+	mavenLocal()
+	maven { url 'https://repo.spring.io/snapshot' }
+	mavenCentral()
+}
+
+dependencies {
+	implementation "io.projectreactor:reactor-core:${reactorCoreVersion}"
+	implementation "io.projectreactor.netty:reactor-netty-core:${reactorNettyVersion}"
+	implementation "io.projectreactor.netty:reactor-netty-http:${reactorNettyVersion}"
+
+	implementation "io.netty:netty-tcnative-boringssl-static:${boringSslVersion}${os_suffix}"
+	implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastleVersion}"
+
+	implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+}
+
+application {
+	mainClassName = javaMainClass
+
+	if (project.hasProperty('http2')) {
+		println "HTTP/2 is enabled"
+		applicationDefaultJvmArgs += ['-Dhttp2']
+	}
+
+	if (project.hasProperty('host')) {
+		println "The server host is configured to be ${host}"
+		applicationDefaultJvmArgs += ["-Dhost=${host}"]
+	}
+
+	if (project.hasProperty('port')) {
+		println "The server port is configured to be ${port}"
+		applicationDefaultJvmArgs += ["-Dport=${port}"]
+	}
+}
