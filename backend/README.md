@@ -10,18 +10,18 @@ java -jar backend-1.0-SNAPSHOT-all.jar
 ```
 
 This command will run the application with
-- Reactor Core 3.5.4
-- Reactor Netty 1.1.5
+- Reactor Core 3.8.2
+- Reactor Netty 1.3.2
 - HTTP/1.1 as a supported protocol
 
 ## How to change Reactor Core/Netty dependency version
 
 ```shell
-./gradlew run -PforceReactorNettyVersion=1.1.6-SNAPSHOT
+./gradlew run -PforceReactorNettyVersion=1.3.3-SNAPSHOT
 ```
 
 ```shell
-./gradlew run -PforceReactorCoreVersion=3.5.5-SNAPSHOT
+./gradlew run -PforceReactorCoreVersion=3.8.3-SNAPSHOT
 ```
 
 ## How to enable HTTP/2

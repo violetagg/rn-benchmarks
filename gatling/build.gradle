@@ -1,12 +1,9 @@
 plugins {
 	id 'java'
-	id 'io.gatling.gradle' version '3.9.0.2'
+	id 'io.gatling.gradle' version '3.14.9.5'
 }
 
 gatling {
-	logLevel = 'WARN'
-	logHttp = 'NONE'
-
 	if (project.hasProperty('users')) {
 		println "The concurrent users per step is configured to be ${users}"
 		jvmArgs += ["-Dusers=${users}"]

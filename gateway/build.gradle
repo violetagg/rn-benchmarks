@@ -2,14 +2,17 @@ plugins {
 	id 'application'
 	id 'java'
 	id 'com.google.osdetector' version '1.7.3'
-	id 'com.github.johnrengelman.shadow' version '7.1.2'
+	id 'com.gradleup.shadow' version '9.3.1'
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 19
-targetCompatibility = 19
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
 
 ext {
 	javaMainClass = 'org.example.ServerApplication'
@@ -19,7 +22,7 @@ ext {
 		os_suffix = ":" + osdetector.classifier
 	}
 
-	reactorCoreDefaultVersion = '3.5.4'
+	reactorCoreDefaultVersion = '3.8.2'
 	if (!project.hasProperty('forceReactorCoreVersion')) {
 		reactorCoreVersion = reactorCoreDefaultVersion
 	}
@@ -28,7 +31,7 @@ ext {
 		println "Reactor Core version is configured from command line: ${forceReactorCoreVersion}"
 	}
 
-	reactorNettyDefaultVersion = '1.1.5'
+	reactorNettyDefaultVersion = '1.3.2'
 	if (!project.hasProperty('forceReactorNettyVersion')) {
 		reactorNettyVersion = reactorNettyDefaultVersion
 	}
@@ -37,12 +40,13 @@ ext {
 		println "Reactor Netty version is configured from command line: ${forceReactorNettyVersion}"
 	}
 
-	boringSslVersion = '2.0.59.Final'
-	bouncycastleVersion = '1.70'
+	nettyVersion = '4.2.9.Final'
+	boringSslVersion = '2.0.74.Final'
+	bouncycastleVersion = '1.83'
 
-	jacksonDatabindVersion = '2.14.2'
+	jacksonDatabindVersion = '2.21.0'
 
-	logbackVersion = '1.2.11'
+	logbackVersion = '1.2.13'
 }
 
 repositories {
@@ -57,7 +61,8 @@ dependencies {
 	implementation "io.projectreactor.netty:reactor-netty-http:${reactorNettyVersion}"
 
 	implementation "io.netty:netty-tcnative-boringssl-static:${boringSslVersion}${os_suffix}"
-	implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastleVersion}"
+	implementation "io.netty:netty-pkitesting:$nettyVersion"
+	implementation "org.bouncycastle:bcpkix-jdk18on:${bouncycastleVersion}"
 
 	implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
 
@@ -65,7 +70,7 @@ dependencies {
 }
 
 application {
-	mainClassName = javaMainClass
+	mainClass = javaMainClass
 
 	if (project.hasProperty('http2')) {
 		println "HTTP/2 is enabled"
