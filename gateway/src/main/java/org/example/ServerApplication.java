@@ -26,6 +26,7 @@ public class ServerApplication {
 	static final HttpClient CLIENT =
 			HttpClient.create(PROVIDER)
 					.baseUrl(REMOTE_SERVER_URL)
+					.protocol(HTTP2 ? HttpProtocol.H2 : HttpProtocol.HTTP11)
 					.secure(spec -> spec.sslContext(
 							HTTP2 ? Http2SslContextSpec.forClient().configure(builder -> builder.trustManager(InsecureTrustManagerFactory.INSTANCE)) :
 									Http11SslContextSpec.forClient().configure(builder -> builder.trustManager(InsecureTrustManagerFactory.INSTANCE))
